@@ -43,7 +43,7 @@ export class Subject extends Model<Subject, SubjectCreate> {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   isActive: boolean;
-  
+
   @BelongsToMany(() => Character, () => CharacterSubject)
   characters: Character[];
 }

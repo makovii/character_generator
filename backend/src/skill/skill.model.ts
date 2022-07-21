@@ -43,7 +43,7 @@ export class Skill extends Model<Skill, SkillCreate> {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   isActive: boolean;
-  
+
   @BelongsToMany(() => Character, () => CharacterSkill)
   characters: Character[];
 }

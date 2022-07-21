@@ -4,11 +4,9 @@ import {
   Column,
   DataType,
   ForeignKey,
-  BelongsTo,
 } from 'sequelize-typescript';
 import { Role } from '../role/role.model';
 import { PRIMARY_KEY } from '../constants';
-import { Character } from 'src/character/character.model';
 
 interface UserCreate {
   name: string;
@@ -44,5 +42,4 @@ export class User extends Model<User, UserCreate> {
 
   @Column({ type: DataType.STRING })
   banReason: string;
-
 }

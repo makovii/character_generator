@@ -48,7 +48,7 @@ import { JwtDB } from './auth/jwt.model';
         Clothes,
         CharacterClothes,
         Candidate,
-        JwtDB
+        JwtDB,
       ],
       autoLoadModels: true,
       synchronize: true,

@@ -18,7 +18,12 @@ const transporter = nodemailer.createTransport(
   },
 );
 
-const mailer = (message: { to: string; subject: string; text: string; html: string; }) => {
+const mailer = (message: {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+}): void => {
   transporter.sendMail(message, (err: Error) => {
     if (err) {
       return console.log(err);

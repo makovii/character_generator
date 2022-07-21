@@ -1,21 +1,12 @@
-import {
-  Model,
-  Table,
-  Column,
-  DataType,
-  ForeignKey,
-  BelongsTo,
-} from 'sequelize-typescript';
-import { Role } from '../role/role.model';
+import { Model, Table, Column, DataType } from 'sequelize-typescript';
 import { PRIMARY_KEY } from '../constants';
-import { Character } from 'src/character/character.model';
 
 interface CandidateCreate {
   name: string;
   email?: string;
   password: string;
   phone?: string;
-  code?: string
+  code?: string;
 }
 
 @Table({ tableName: 'candidate' })
@@ -26,7 +17,7 @@ export class Candidate extends Model<CandidateCreate> {
   @Column({ type: DataType.STRING, allowNull: false })
   name: string;
 
-  @Column({ type: DataType.STRING})
+  @Column({ type: DataType.STRING })
   email: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
@@ -37,5 +28,4 @@ export class Candidate extends Model<CandidateCreate> {
 
   @Column({ type: DataType.STRING })
   code: string;
-
 }

@@ -10,19 +10,19 @@ const PRIMARY_KEY = {
 enum ROLE {
   ADMIN = 1,
   PLAYER = 2,
-};
+}
 
-const clothesTable = {
+const clothesTable: Things = {
   thing: 'clothes',
-  openedThing: 'openedClothes'
+  openedThing: 'openedClothes',
 };
-const skillTable = {
+const skillTable: Things = {
   thing: 'skills',
-  openedThing: 'openedSkills'
+  openedThing: 'openedSkills',
 };
-const subjectTable = {
+const subjectTable: Things = {
   thing: 'subjects',
-  openedThing: 'openedSubjects'
+  openedThing: 'openedSubjects',
 };
 
 export { PRIMARY_KEY, ROLE, clothesTable, skillTable, subjectTable };

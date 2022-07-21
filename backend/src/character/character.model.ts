@@ -16,9 +16,14 @@ import { Subject } from 'src/subject/subject.model';
 import { User } from 'src/user/user.model';
 import { PRIMARY_KEY } from '../constants';
 
+interface CharacterCreate {
+  id: number;
+  name: string;
+  userId: number;
+}
 
 @Table({ tableName: 'character' })
-export class Character extends Model<Character> {
+export class Character extends Model<Character, CharacterCreate> {
   @Column(PRIMARY_KEY)
   id: number;
 

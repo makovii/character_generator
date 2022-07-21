@@ -2,9 +2,10 @@ import { IsString, Length, IsEmail, ValidateIf } from 'class-validator';
 import * as Response from '../../response.messages';
 
 export class CreateUserDto {
+  readonly id: number;
   readonly name: string;
 
-  @ValidateIf(dto => dto.email)
+  @ValidateIf((dto) => dto.email)
   @IsString(Response.MUST_BE_STR)
   @IsEmail({}, Response.WRONG_EMAIL)
   readonly email?: string;

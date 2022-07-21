@@ -11,8 +11,10 @@ import * as Response from '../response.messages';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
-  async transform(value: Record<string, string>, metadata: ArgumentMetadata): Promise<Record<string, string>> {
-    
+  async transform(
+    value: Record<string, string>,
+    metadata: ArgumentMetadata,
+  ): Promise<Record<string, string>> {
     if (!metadata.metatype) {
       throw {};
     }
@@ -23,7 +25,7 @@ export class ValidationPipe implements PipeTransform {
     if (errors.length) {
       const messages = errors.map((err) => {
         if (!err.constraints) {
-          throw new HttpException(Response.VALIDATION, HttpStatus.BAD_REQUEST);;
+          throw new HttpException(Response.VALIDATION, HttpStatus.BAD_REQUEST);
         }
 
         return `${err.property} - ${Object.values(err.constraints).join(', ')}`;

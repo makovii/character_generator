@@ -3,15 +3,20 @@ import {
   Table,
   Column,
   DataType,
-  BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
 import { User } from 'src/user/user.model';
 import { PRIMARY_KEY } from '../constants';
 
+interface JwtCreate {
+  userId: number;
+  jwt: string;
+  isActive: boolean;
+  tokenId: string;
+}
 
 @Table({ tableName: 'jwt' })
-export class JwtDB extends Model<JwtDB> {
+export class JwtDB extends Model<JwtDB, JwtCreate> {
   @Column(PRIMARY_KEY)
   id: number;
 
@@ -19,7 +24,7 @@ export class JwtDB extends Model<JwtDB> {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
-  }) 
+  })
   tokenId: string;
 
   @Column({ type: DataType.INTEGER })
@@ -31,5 +36,4 @@ export class JwtDB extends Model<JwtDB> {
 
   @Column({ type: DataType.BOOLEAN })
   isActive: boolean;
-
 }

@@ -21,11 +21,11 @@ dotenv.config();
       signOptions: {
         expiresIn: '24h',
       },
-    }), 
+    }),
     SequelizeModule.forFeature([User, Candidate]),
     CharacterModule,
     ClothesModule,
-    forwardRef(() => AuthModule)
+    forwardRef(() => AuthModule),
   ],
   exports: [UserService],
 })

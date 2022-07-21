@@ -1,4 +1,4 @@
-# AirSoft
+# backend for character generator
 
 ## What is it ?
 Your attention is presented to the development of backend software for the organization of airsoft teams. This includes CRUD operations for the team and users, an interface for the manager and administrator, the ability to register and receive notifications, and much more, which is described below.

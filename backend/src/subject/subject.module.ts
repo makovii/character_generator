@@ -12,9 +12,9 @@ import { CharacterModule } from 'src/character/character.module';
   imports: [
     SequelizeModule.forFeature([Subject, CharacterSubject]),
     forwardRef(() => AuthModule),
-    forwardRef(() => CharacterModule)
+    forwardRef(() => CharacterModule),
   ],
   controllers: [SubjectController],
-  exports: [SubjectService]
+  exports: [SubjectService],
 })
 export class SubjectModule {}

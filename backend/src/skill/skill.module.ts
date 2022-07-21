@@ -12,9 +12,9 @@ import { CharacterModule } from 'src/character/character.module';
   imports: [
     SequelizeModule.forFeature([Skill, CharacterSkill]),
     forwardRef(() => AuthModule),
-    forwardRef(() => CharacterModule)
+    forwardRef(() => CharacterModule),
   ],
   controllers: [SkillController],
-  exports: [SkillService]
+  exports: [SkillService],
 })
 export class SkillModule {}
