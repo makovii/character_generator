@@ -6,14 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CharacterService } from 'src/character/character.service';
-import { clothesTable } from 'src/constants';
+import { CharacterService } from '../character/character.service';
+import { clothesTable } from '../constants';
 import {
   FAILED,
   FAILED_FETCH,
   FAIL_WRITE_DB,
   SUCCESS,
-} from 'src/response.messages';
+} from '../response.messages';
 import { CharacterClothes } from './character-clothes.model';
 import { Clothes } from './clothes.model';
 import { CreateClothes } from './dto/create-clothes.dto';

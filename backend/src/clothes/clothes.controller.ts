@@ -8,9 +8,9 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Role } from 'src/auth/checkRole.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ROLE } from 'src/constants';
+import { Role } from '../auth/checkRole.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ROLE } from '../constants';
 import { Clothes } from './clothes.model';
 import { ClothesService } from './clothes.service';
 import { CreateClothes } from './dto/create-clothes.dto';

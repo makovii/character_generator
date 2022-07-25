@@ -10,8 +10,8 @@ import {
   UploadedFile,
   Res,
 } from '@nestjs/common';
-import { RequestdWithUser } from 'src/types/request-type';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RequestdWithUser } from '../types/request-type';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CharacterService } from './character.service';
 import { EditCharacterBio } from './dto/edit-character.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -20,8 +20,8 @@ import { editFileName, imageFileFilter } from './util/image-upload.util';
 import { UploadImageDto } from './dto/upload-image.dto';
 import { Response } from 'express';
 import { EditCharacteristics } from './dto/edit-characteristics.dto';
-import { Role } from 'src/auth/checkRole.decorator';
-import { ROLE } from 'src/constants';
+import { Role } from '../auth/checkRole.decorator';
+import { ROLE } from '../constants';
 import { Character } from './character.model';
 
 @Controller('character')
@@ -30,7 +30,7 @@ export class CharacterController {
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  getCharacterPage(@Req() req: RequestdWithUser): Promise<Character> {
+  getCharacterPage(@Req() req: RequestdWithUser): Promise<Character | boolean> {
     return this.characterService.getCharacterPage(req);
   }
 
@@ -86,7 +86,7 @@ export class CharacterController {
   @Get('admin')
   @Role(ROLE[ROLE.ADMIN])
   @UseGuards(JwtAuthGuard)
-  getCharacterById(@Body() dto: { id: number }): Promise<Character> {
+  getCharacterById(@Body() dto: { id: number }): Promise<Character | boolean> {
     return this.characterService.getCharacterById(dto.id);
   }
 }

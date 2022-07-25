@@ -1,9 +1,10 @@
 import { Controller, Get, UseGuards, Post, Body } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserService } from './user.service';
-import { ROLE } from 'src/constants';
-import { Role } from 'src/auth/checkRole.decorator';
+import { ROLE } from '../constants';
+import { Role } from '../auth/checkRole.decorator';
 import { User } from './user.model';
+import { Candidate } from './candidate.model';
 
 @Controller('user')
 export class UserController {
@@ -41,5 +42,12 @@ export class UserController {
     @Body() dto: { id: number; skillsId: number[] },
   ): Promise<ResponseMsg> {
     return this.userService.insertOpenedSkills(dto.id, dto.skillsId);
+  }
+
+  @Get('getCandidate')
+  @Role(ROLE[ROLE.ADMIN])
+  @UseGuards(JwtAuthGuard)
+  getCandidateByPhone(@Body() dto: { phone: string }): Promise<Candidate> {
+    return this.userService.getCandidateByPhone(dto.phone);
   }
 }

@@ -1,5 +1,7 @@
 import { DataType } from 'sequelize-typescript';
 
+const BASE_STRING = 'http://localhost:3030';
+
 const PRIMARY_KEY = {
   type: DataType.INTEGER,
   unique: true,
@@ -25,4 +27,11 @@ const subjectTable: Things = {
   openedThing: 'openedSubjects',
 };
 
-export { PRIMARY_KEY, ROLE, clothesTable, skillTable, subjectTable };
+export {
+  PRIMARY_KEY,
+  ROLE,
+  clothesTable,
+  skillTable,
+  subjectTable,
+  BASE_STRING,
+};

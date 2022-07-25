@@ -4,8 +4,8 @@ import { CharacterSubject } from './character-subject.model';
 import { Subject } from './subject.model';
 import { SubjectService } from './subject.service';
 import { SubjectController } from './subject.controller';
-import { AuthModule } from 'src/auth/auth.module';
-import { CharacterModule } from 'src/character/character.module';
+import { AuthModule } from '../auth/auth.module';
+import { CharacterModule } from '../character/character.module';
 
 @Module({
   providers: [SubjectService],

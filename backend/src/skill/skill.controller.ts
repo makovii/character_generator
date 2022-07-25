@@ -8,9 +8,9 @@ import {
   Param,
   Body,
 } from '@nestjs/common';
-import { Role } from 'src/auth/checkRole.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ROLE } from 'src/constants';
+import { Role } from '../auth/checkRole.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ROLE } from '../constants';
 import { CreateSkill } from './dto/create-skill.dto';
 import { Skill } from './skill.model';
 import { SkillService } from './skill.service';

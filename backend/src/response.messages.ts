@@ -28,8 +28,8 @@ export const NO_SUCH_CHARACTER = { message: 'no such character' };
 export const LOG_USER_CREATE = { message: 'created user: ' };
 export const WRONG_PHONE = { message: 'wrong phone number' };
 export const WRONG_CODE = { message: 'wrong code' };
-export const WRONG_EMAIL_OR_PASS = { message: 'wrong email or passord' };
-export const WRONG_PHONE_OR_PASS = { message: 'wrong phone or passord' };
+export const WRONG_EMAIL_OR_PASS = { message: 'wrong email or password' };
+export const WRONG_PHONE_OR_PASS = { message: 'wrong phone or password' };
 
 export const LOG_OUT_SUCESS = { message: 'log out sucess' };
 export const LOG_OUT_FAILED = { message: 'log out failed' };

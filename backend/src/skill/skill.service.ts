@@ -6,14 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CharacterService } from 'src/character/character.service';
-import { skillTable } from 'src/constants';
+import { CharacterService } from '../character/character.service';
+import { skillTable } from '../constants';
 import {
   FAILED,
   FAILED_FETCH,
   FAIL_WRITE_DB,
   SUCCESS,
-} from 'src/response.messages';
+} from '../response.messages';
 import { CharacterSkill } from './character-skill.model';
 import { CreateSkill } from './dto/create-skill.dto';
 import { Skill } from './skill.model';

@@ -14,8 +14,8 @@ import * as Response from '../response.messages';
 import { mailer } from '../nodemailer';
 import * as dotenv from 'dotenv';
 import * as env from 'env-var';
-import { sendSms } from 'src/sms';
-import { User } from 'src/user/user.model';
+import { sendSms } from '../sms';
+import { User } from '../user/user.model';
 import { JwtDB } from './jwt.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,7 +31,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(userDto: CreateUserDto): Promise<string> {
+  async login(userDto: CreateUserDto): Promise<{ token: string }> {
     const uuid = uuidv4();
     const user = await this.validateUser(userDto);
     const token = await this.generateToken({ ...user, tokenId: uuid });
@@ -42,7 +42,7 @@ export class AuthService {
       tokenId: uuid,
     });
 
-    return token;
+    return { token: token };
   }
 
   async logout(userDto: CreateUserDto): Promise<ResponseMsg> {

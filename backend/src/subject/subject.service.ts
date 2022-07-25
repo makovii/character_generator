@@ -6,14 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CharacterService } from 'src/character/character.service';
-import { subjectTable } from 'src/constants';
+import { CharacterService } from '../character/character.service';
+import { subjectTable } from '../constants';
 import {
   FAILED,
   FAILED_FETCH,
   FAIL_WRITE_DB,
   SUCCESS,
-} from 'src/response.messages';
+} from '../response.messages';
 import { CharacterSubject } from './character-subject.model';
 import { CreateSubject } from './dto/create-subject.dto';
 import { Subject } from './subject.model';

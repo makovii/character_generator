@@ -10,10 +10,10 @@ import {
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { ValidationPipe } from '../pipe/validation.pipe';
-import { UserService } from 'src/user/user.service';
-import { CandidateDto } from 'src/user/dto/candidate.dto';
+import { UserService } from '../user/user.service';
+import { CandidateDto } from '../user/dto/candidate.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { User } from 'src/user/user.model';
+import { User } from '../user/user.model';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +24,7 @@ export class AuthController {
 
   @UsePipes(ValidationPipe)
   @Get('/login')
-  login(@Body() userDto: CreateUserDto): Promise<string> {
+  login(@Body() userDto: CreateUserDto): Promise<{ token: string }> {
     return this.authService.login(userDto);
   }
 

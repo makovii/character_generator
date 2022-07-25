@@ -4,16 +4,15 @@ import {
   Column,
   DataType,
   BelongsToMany,
-  HasOne,
   ForeignKey,
 } from 'sequelize-typescript';
-import { CharacterClothes } from 'src/clothes/character-clothes.model';
-import { Clothes } from 'src/clothes/clothes.model';
-import { CharacterSkill } from 'src/skill/character-skill.model';
-import { Skill } from 'src/skill/skill.model';
-import { CharacterSubject } from 'src/subject/character-subject.model';
-import { Subject } from 'src/subject/subject.model';
-import { User } from 'src/user/user.model';
+import { CharacterClothes } from '../clothes/character-clothes.model';
+import { Clothes } from '../clothes/clothes.model';
+import { CharacterSkill } from '../skill/character-skill.model';
+import { Skill } from '../skill/skill.model';
+import { CharacterSubject } from '../subject/character-subject.model';
+import { Subject } from '../subject/subject.model';
+import { User } from '../user/user.model';
 import { PRIMARY_KEY } from '../constants';
 
 interface CharacterCreate {

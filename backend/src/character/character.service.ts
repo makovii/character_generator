@@ -6,7 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { RequestdWithUser } from 'src/types/request-type';
+import { RequestdWithUser } from '../types/request-type';
 import {
   CHARACTER_NOT_FOUND,
   FAILED,
@@ -14,16 +14,16 @@ import {
   IMAGE_NOT_FOUND,
   NO_SUCH_CHARACTER,
   SUCCESS,
-} from 'src/response.messages';
+} from '../response.messages';
 import { Character } from './character.model';
 import { CreateCharacter } from './dto/create-character.dto';
 import { EditCharacterBio } from './dto/edit-character.dto';
 import { UploadImageDto } from './dto/upload-image.dto';
 import { Response as ExpressResponse } from 'express';
 import { EditCharacteristics } from './dto/edit-characteristics.dto';
-import { ClothesService } from 'src/clothes/clothes.service';
-import { SubjectService } from 'src/subject/subject.service';
-import { SkillService } from 'src/skill/skill.service';
+import { ClothesService } from '../clothes/clothes.service';
+import { SubjectService } from '../subject/subject.service';
+import { SkillService } from '../skill/skill.service';
 import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
@@ -37,13 +37,12 @@ export class CharacterService {
     private sequelize: Sequelize,
   ) {}
 
-  async getCharacterById(id: number): Promise<Character> {
+  async getCharacterById(id: number): Promise<Character | boolean> {
     const character = await this.characterRepository.findOne({
       where: { id },
       include: { all: true },
     });
-    if (!character)
-      throw new HttpException(CHARACTER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    if (!character) return false;
     else return character;
   }
 
@@ -54,7 +53,7 @@ export class CharacterService {
     });
   }
 
-  async getCharacterPage(req: RequestdWithUser): Promise<Character> {
+  async getCharacterPage(req: RequestdWithUser): Promise<Character | boolean> {
     const character = await this.getCharacterById(req.user.id);
     if (!character)
       return await this.createCharacter({
@@ -121,7 +120,11 @@ export class CharacterService {
     if (!character)
       throw new HttpException(CHARACTER_NOT_FOUND, HttpStatus.NOT_FOUND);
 
-    const { openedClothes, openedSkills, openedSubjects } = character;
+    let { openedClothes, openedSkills, openedSubjects } = character;
+    openedClothes = openedClothes == null ? [] : openedClothes;
+    openedSkills = openedSkills == null ? [] : openedSkills;
+    openedSubjects = openedSubjects == null ? [] : openedSubjects;
+
     const resClothes = dto.clothes.every((item) => {
       return openedClothes.includes(item);
     });
@@ -259,8 +262,10 @@ export class CharacterService {
         attributes: ['openedClothes'],
         where: { id: characterId },
       });
+      if (!openedClothesDB) return false;
+
       let openedClothes: number[];
-      if (!openedClothesDB) openedClothes = [];
+      if (!openedClothesDB.openedClothes) openedClothes = [];
       else openedClothes = openedClothesDB.openedClothes;
 
       const updatedClothes = Array.from(new Set(openedClothes.concat(clothes)));
@@ -270,6 +275,7 @@ export class CharacterService {
       );
       return true;
     } catch (_e) {
+      console.log(_e);
       return false;
     }
   }

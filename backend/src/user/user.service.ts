@@ -7,20 +7,20 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
-import { CharacterService } from 'src/character/character.service';
-import { ROLE } from 'src/constants';
+import { CharacterService } from '../character/character.service';
+import { ROLE } from '../constants';
 import {
   CANDIDATE_NOT_FOUND,
   FAILED,
   SUCCESS,
   USER_NOT_FOUND,
   WRONG_CODE,
-} from 'src/response.messages';
+} from '../response.messages';
 import { Candidate } from './candidate.model';
 import { CandidateDto } from './dto/candidate.dto';
 import { User } from './user.model';
-import { AuthService } from 'src/auth/auth.service';
-import { UserLastLogin } from 'src/types/userLastLogin-type';
+import { AuthService } from '../auth/auth.service';
+import { UserLastLogin } from '../types/userLastLogin-type';
 
 @Injectable()
 export class UserService {
@@ -43,6 +43,7 @@ export class UserService {
   async createUserFromSms(dto: CandidateDto): Promise<User> {
     const candidate = await this.candidateRepository.findOne({
       where: { phone: dto.phone },
+      order: [['createdAt', 'DESC']],
     });
     if (!candidate)
       throw new HttpException(CANDIDATE_NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -128,5 +129,16 @@ export class UserService {
     );
     if (insertedToCharacter) return SUCCESS;
     else return FAILED;
+  }
+
+  async getCandidateByPhone(phone: string): Promise<Candidate> {
+    const candidate = await this.candidateRepository.findOne({
+      where: { phone },
+      order: [['createdAt', 'DESC']],
+    });
+    if (!candidate)
+      throw new HttpException(CANDIDATE_NOT_FOUND, HttpStatus.NOT_FOUND);
+
+    return candidate;
   }
 }

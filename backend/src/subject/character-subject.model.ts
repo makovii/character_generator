@@ -5,7 +5,7 @@ import {
   DataType,
   ForeignKey,
 } from 'sequelize-typescript';
-import { Character } from 'src/character/character.model';
+import { Character } from '../character/character.model';
 import { PRIMARY_KEY } from '../constants';
 import { Subject } from './subject.model';
 

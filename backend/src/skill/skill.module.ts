@@ -4,8 +4,8 @@ import { CharacterSkill } from './character-skill.model';
 import { Skill } from './skill.model';
 import { SkillService } from './skill.service';
 import { SkillController } from './skill.controller';
-import { AuthModule } from 'src/auth/auth.module';
-import { CharacterModule } from 'src/character/character.module';
+import { AuthModule } from '../auth/auth.module';
+import { CharacterModule } from '../character/character.module';
 
 @Module({
   providers: [SkillService],
