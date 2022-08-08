@@ -8,7 +8,6 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  Res,
 } from '@nestjs/common';
 import { RequestdWithUser } from '../types/request-type';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -18,7 +17,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from './util/image-upload.util';
 import { UploadImageDto } from './dto/upload-image.dto';
-import { Response } from 'express';
 import { EditCharacteristics } from './dto/edit-characteristics.dto';
 import { Role } from '../auth/checkRole.decorator';
 import { ROLE } from '../constants';
@@ -63,8 +61,8 @@ export class CharacterController {
 
   @Get('image')
   @UseGuards(JwtAuthGuard)
-  getImage(@Req() req: RequestdWithUser, @Res() res: Response): Promise<void> {
-    return this.characterService.getImage(req, res);
+  getImage(@Req() req: RequestdWithUser): Promise<string> {
+    return this.characterService.getImage(req);
   }
 
   @Patch('characteristics')

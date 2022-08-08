@@ -19,13 +19,13 @@ import { Character } from './character.model';
 import { CreateCharacter } from './dto/create-character.dto';
 import { EditCharacterBio } from './dto/edit-character.dto';
 import { UploadImageDto } from './dto/upload-image.dto';
-import { Response as ExpressResponse } from 'express';
 import { EditCharacteristics } from './dto/edit-characteristics.dto';
 import { ClothesService } from '../clothes/clothes.service';
 import { SubjectService } from '../subject/subject.service';
 import { SkillService } from '../skill/skill.service';
 import { Sequelize } from 'sequelize-typescript';
 import { Things } from 'src/types/things-type';
+import { BASE_STRING } from 'src/constants';
 
 const FEATURES = {
   strength: 0,
@@ -113,14 +113,14 @@ export class CharacterService {
     return SUCCESS;
   }
 
-  async getImage(req: RequestdWithUser, res: ExpressResponse): Promise<void> {
+  async getImage(req: RequestdWithUser): Promise<string> {
     const character = await this.characterRepository.findOne({
       where: { id: req.user.id },
     });
     if (!character?.pathPhoto) {
       throw new HttpException(IMAGE_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
-    return res.sendFile(character.pathPhoto, { root: './images' });
+    return `${BASE_STRING}/${character.pathPhoto}`;
   }
 
   async editCharacteristics(
