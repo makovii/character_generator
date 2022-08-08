@@ -1,4 +1,5 @@
 import { DataType } from 'sequelize-typescript';
+import { Things } from './types/things-type';
 
 const BASE_STRING = 'http://localhost:3030';
 

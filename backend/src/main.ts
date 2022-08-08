@@ -6,6 +6,8 @@ async function run(): Promise<void> {
   const PORT = env.get('PORT').required().asIntPositive() || 3000;
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   await app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
   });

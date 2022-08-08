@@ -86,7 +86,7 @@ export class CharacterController {
   @Get('admin')
   @Role(ROLE[ROLE.ADMIN])
   @UseGuards(JwtAuthGuard)
-  getCharacterById(@Body() dto: { id: number }): Promise<Character | boolean> {
+  getCharacterById(@Body() dto: { id: number }): Promise<Character | null> {
     return this.characterService.getCharacterById(dto.id);
   }
 }

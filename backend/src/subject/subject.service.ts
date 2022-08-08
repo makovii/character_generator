@@ -29,7 +29,10 @@ export class SubjectService {
   ) {}
 
   async getAllSubjects(): Promise<Subject[]> {
-    const subjects = await this.subjectRepository.findAll({ where: {} });
+    const subjects = await this.subjectRepository.findAll({
+      where: {},
+      include: { all: true },
+    });
     if (!subjects)
       throw new HttpException(FAILED_FETCH, HttpStatus.EXPECTATION_FAILED);
     return subjects;

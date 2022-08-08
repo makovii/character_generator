@@ -105,8 +105,7 @@ export class UserService {
       userId,
       clothesId,
     );
-    if (insertedToCharacter) return SUCCESS;
-    else return FAILED;
+    return insertedToCharacter ? SUCCESS : FAILED;
   }
 
   async insertOpenedSubjects(
@@ -115,8 +114,7 @@ export class UserService {
   ): Promise<ResponseMsg> {
     const insertedToCharacter =
       await this.characterService.insertOpenedSubjects(userId, subjectsId);
-    if (insertedToCharacter) return SUCCESS;
-    else return FAILED;
+    return insertedToCharacter ? SUCCESS : FAILED;
   }
 
   async insertOpenedSkills(
@@ -127,8 +125,7 @@ export class UserService {
       userId,
       skillsId,
     );
-    if (insertedToCharacter) return SUCCESS;
-    else return FAILED;
+    return insertedToCharacter ? SUCCESS : FAILED;
   }
 
   async getCandidateByPhone(phone: string): Promise<Candidate> {

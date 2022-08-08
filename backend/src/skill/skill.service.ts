@@ -29,7 +29,10 @@ export class SkillService {
   ) {}
 
   async getAllSkills(): Promise<Skill[]> {
-    const skills = await this.skillRepository.findAll({ where: {} });
+    const skills = await this.skillRepository.findAll({
+      where: {},
+      include: { all: true },
+    });
     if (!skills)
       throw new HttpException(FAILED_FETCH, HttpStatus.EXPECTATION_FAILED);
     return skills;

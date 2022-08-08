@@ -29,7 +29,10 @@ export class ClothesService {
   ) {}
 
   async getAllClothes(): Promise<Clothes[]> {
-    const clothes = await this.clothesRepository.findAll({ where: {} });
+    const clothes = await this.clothesRepository.findAll({
+      where: {},
+      include: { all: true },
+    });
     if (!clothes)
       throw new HttpException(FAILED_FETCH, HttpStatus.EXPECTATION_FAILED);
     return clothes;

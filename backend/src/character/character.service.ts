@@ -25,6 +25,22 @@ import { ClothesService } from '../clothes/clothes.service';
 import { SubjectService } from '../subject/subject.service';
 import { SkillService } from '../skill/skill.service';
 import { Sequelize } from 'sequelize-typescript';
+import { Things } from 'src/types/things-type';
+
+const FEATURES = {
+  strength: 0,
+  agility: 0,
+  endurance: 0,
+  intellect: 0,
+};
+const STATS = {
+  meleeDamage: 0,
+  rangedDamage: 0,
+  protection: 0,
+  magicDamage: 0,
+  healthPoint: 0,
+  magicPoint: 0,
+};
 
 @Injectable()
 export class CharacterService {
@@ -37,13 +53,12 @@ export class CharacterService {
     private sequelize: Sequelize,
   ) {}
 
-  async getCharacterById(id: number): Promise<Character | boolean> {
+  async getCharacterById(id: number): Promise<Character | null> {
     const character = await this.characterRepository.findOne({
       where: { id },
       include: { all: true },
     });
-    if (!character) return false;
-    else return character;
+    return character;
   }
 
   async createCharacter(dto: CreateCharacter): Promise<Character> {
@@ -74,8 +89,7 @@ export class CharacterService {
       { ...dto },
       { where: { id: req.user.id } },
     );
-    if (res === 1) return SUCCESS;
-    else return FAILED;
+    return res === 1 ? SUCCESS : FAILED;
   }
 
   async uploadImage(
@@ -93,6 +107,7 @@ export class CharacterService {
       );
     } catch (_e) {
       throw new HttpException(FAIL_WRITE_DB, HttpStatus.BAD_REQUEST);
+      console.log(_e);
     }
 
     return SUCCESS;
@@ -143,29 +158,18 @@ export class CharacterService {
       this.skillService.getSelectedSkills(dto.skills),
     ]);
 
-    const features = {
-      strength: 0,
-      agility: 0,
-      endurance: 0,
-      intellect: 0,
-    };
-    const stats = {
-      meleeDamage: 0,
-      rangedDamage: 0,
-      protection: 0,
-      magicDamage: 0,
-      healthPoint: 0,
-      magicPoint: 0,
-    };
-
+    // preparing an array that stores clothes, skills, items that the player puts on
     const arsenal: Arsenal[][] = [[], [], []];
-
+    const features = FEATURES;
+    const stats = STATS;
     for (let i = 0; i < 3; i++) {
       const sumType = characteristics[i].reduce(
         (item, next) => {
+          // push element in array. i == (clothes | skill | subject)
           arsenal[i].push(next);
 
           return {
+            // update parameters after putting on the feature
             strength: (item.strength += next.strength),
             agility: (item.agility += next.agility),
             endurance: (item.endurance += next.endurance),
@@ -185,6 +189,7 @@ export class CharacterService {
       features.intellect += sumType.intellect;
     }
 
+    // update other features that created by combining the previous
     for (const key in features) {
       switch (key) {
         case 'strength': {
@@ -208,6 +213,7 @@ export class CharacterService {
       }
     }
 
+    // call function that insert data into database
     const inserted = await this.insertFeature(req, features, stats, arsenal);
     if (inserted) return SUCCESS;
     else return new HttpException(FAIL_WRITE_DB, HttpStatus.BAD_REQUEST);
@@ -262,16 +268,21 @@ export class CharacterService {
         attributes: ['openedClothes'],
         where: { id: characterId },
       });
-      if (!openedClothesDB) return false;
 
-      let openedClothes: number[];
-      if (!openedClothesDB.openedClothes) openedClothes = [];
-      else openedClothes = openedClothesDB.openedClothes;
+      const openedClothes: number[] = openedClothesDB?.openedClothes
+        ? openedClothesDB.openedClothes
+        : [];
 
       const updatedClothes = Array.from(new Set(openedClothes.concat(clothes)));
       const clothesStr = updatedClothes.join(',');
       await this.sequelize.query(
-        `update character set "openedClothes" = '{${clothesStr}}' where id = ${characterId}`,
+        `update character set "openedClothes" = :clothesStr where id = :characterId`,
+        {
+          replacements: {
+            clothesStr: `{${clothesStr}}`,
+            characterId: characterId,
+          },
+        },
       );
       return true;
     } catch (_e) {
@@ -290,19 +301,26 @@ export class CharacterService {
         attributes: ['openedSubjects'],
         where: { id: characterId },
       });
-      let openedSubjects: number[];
-      if (!openedSubjectDB) openedSubjects = [];
-      else openedSubjects = openedSubjectDB.openedClothes;
+      const openedSubjects: number[] = openedSubjectDB?.openedSubjects
+        ? openedSubjectDB.openedSubjects
+        : [];
 
       const updatedClothes = Array.from(
         new Set(openedSubjects.concat(subjects)),
       );
       const subjectsStr = updatedClothes.join(',');
       await this.sequelize.query(
-        `update character set "openedSubjects" = '{${subjectsStr}}' where id = ${characterId}`,
+        `update character set "openedSubjects" = :subjectsStr where id = :characterId`,
+        {
+          replacements: {
+            subjectsStr: `{${subjectsStr}}`,
+            characterId: `${characterId}`,
+          },
+        },
       );
       return true;
     } catch (_e) {
+      console.log(_e);
       return false;
     }
   }
@@ -317,17 +335,24 @@ export class CharacterService {
         attributes: ['openedSkills'],
         where: { id: characterId },
       });
-      let openedSkills: number[];
-      if (!openedSkillsDB) openedSkills = [];
-      else openedSkills = openedSkillsDB.openedClothes;
+      const openedSkills: number[] = openedSkillsDB?.openedSkills
+        ? openedSkillsDB.openedSkills
+        : [];
 
       const updatedClothes = Array.from(new Set(openedSkills.concat(skills)));
       const skillsStr = updatedClothes.join(',');
       await this.sequelize.query(
-        `update character set "openedSkills" = '{${skillsStr}}' where id = ${characterId}`,
+        `update character set "openedSkills" = :skillsStr where id = :characterId`,
+        {
+          replacements: {
+            skillsStr: `{${skillsStr}}`,
+            characterId: `${characterId}`,
+          },
+        },
       );
       return true;
     } catch (_e) {
+      console.log(_e);
       return false;
     }
   }

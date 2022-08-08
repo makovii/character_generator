@@ -22,6 +22,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { GenerateToken } from './dto/generate-token.dto';
 dotenv.config();
 
+const ENCODING_SALT = env.get('ENCODING_SALT').required().asIntPositive();
+const HOME_PAGE = env.get('LINK_HOME_PAGE').required().asString();
+const FROM_SMS = env.get('FROM_SMS').required().asString();
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -46,11 +50,12 @@ export class AuthService {
   }
 
   async logout(userDto: CreateUserDto): Promise<ResponseMsg> {
-    let user: User | null = null;
-    if (userDto.phone)
-      user = await this.userService.getUserByPhone(userDto.phone);
-    else if (userDto.email)
-      user = await this.userService.getUserByEmail(userDto.email);
+    const user = userDto.phone
+      ? await this.userService.getUserByPhone(userDto.phone)
+      : userDto.email
+      ? await this.userService.getUserByEmail(userDto.email)
+      : null;
+
     if (!user)
       throw new HttpException(Response.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
 
@@ -66,11 +71,9 @@ export class AuthService {
   }
 
   async registration(userDto: CreateUserDto): Promise<string> {
-    const ENCODING_SALT = env.get('ENCODING_SALT').required().asIntPositive();
     const hashPassword = await bcrypt.hash(userDto.password, ENCODING_SALT);
 
-    const dto = { ...userDto };
-    dto.password = hashPassword;
+    const dto = { ...userDto, password: hashPassword };
 
     if (dto.email) {
       const candidate = await this.userService.getUserByEmail(dto.email);
@@ -78,10 +81,7 @@ export class AuthService {
         throw new HttpException(Response.SAME_EMAIL, HttpStatus.BAD_REQUEST);
       }
       const token = await this.generateToken(dto);
-      const link = `${env
-        .get('LINK_HOME_PAGE')
-        .required()
-        .asString()}/auth/confirmEmail/${token}`;
+      const link = `${HOME_PAGE}/auth/confirmEmail/${token}`;
 
       const message = {
         to: dto.email,
@@ -95,20 +95,13 @@ export class AuthService {
       mailer(message);
       return link;
     } else if (dto.phone) {
-      const link = `${env
-        .get('LINK_HOME_PAGE')
-        .required()
-        .asString()}/auth/confirmPhone`;
+      const link = `${HOME_PAGE}/auth/confirmPhone`;
       const code = Array(5)
         .fill(null)
         .map(() => Math.floor(Math.random() * 10))
         .join('');
 
-      await sendSms(
-        env.get('FROM_SMS').required().asString(),
-        dto.phone,
-        `Your code- ${code} .`,
-      );
+      await sendSms(FROM_SMS, dto.phone, `Your code- ${code} .`);
       await this.userService.createCandidate({ ...dto, code });
       return link;
     } else
@@ -165,8 +158,7 @@ export class AuthService {
       attributes: ['isActive'],
       where: { tokenId },
     });
-    if (jwt === null) return false;
-    return jwt.isActive;
+    return jwt?.isActive || false;
   }
 
   async getLastJwtDateByUserId(id: number): Promise<JwtDB | null> {
