@@ -1,0 +1,26 @@
+{
+  "development": {
+    "use_env_variable": "",
+    "username": "postgres",
+    "password": "root",
+    "database": "character",
+    "host": "postgres",
+    "dialect": "postgres"
+  },
+  "test": {
+    "use_env_variable": "",
+    "username": "postgres",
+    "password": "root",
+    "database": "character",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "",
+    "username": "postgres",
+    "password": "root",
+    "database": "character",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
