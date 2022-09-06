@@ -4,7 +4,7 @@
     "username": "postgres",
     "password": "root",
     "database": "character",
-    "host": "127.0.0.1",
+    "host": "postgres",
     "dialect": "postgres"
   },
   "test": {

@@ -1,11 +1,11 @@
+import * as path from 'path';
 import * as request from 'supertest';
 import { BASE_STRING } from '../src/constants';
 import { generateUser } from './generateUser';
 
-describe('registration-login user, login admin', () => {
+describe('upload-get image', () => {
   let adminToken = '';
   let userToken = '';
-  let newUser: { name: string; phone: string; password: string };
 
   it('login admin', async () => {
     const { body } = await request(`${BASE_STRING}`).get('/auth/login').send({
@@ -21,7 +21,7 @@ describe('registration-login user, login admin', () => {
   });
 
   it('registration-login-get page-patch clothes user', async () => {
-    newUser = generateUser();
+    const newUser = generateUser();
 
     await request(`${BASE_STRING}`).post('/auth/registration').send(newUser);
 
@@ -60,58 +60,28 @@ describe('registration-login user, login admin', () => {
       intellect: expect.any(Number),
     });
 
-    const resEditFeature = await request(`${BASE_STRING}`)
-      .patch('/character/characteristics')
+    const newImage = await request(`${BASE_STRING}`)
+      .post('/character/image')
       .set('Authorization', `bearer ${userToken}`)
-      .send({
-        clothes: [1, 2],
-        skills: [],
-        subjects: [],
-      });
+      .attach('image', path.resolve(__dirname, './okay.jpg'));
 
-    expect(resEditFeature.body).toMatchObject({
-      message: 'operation failed',
-    });
-
-    const resInsertOpenedClothes = await request(`${BASE_STRING}`)
-      .post('/user/insert/openedClothes')
-      .set('Authorization', `bearer ${adminToken}`)
-      .send({ id: resGetPage.body.id, clothesId: [1, 2, 3, 4] });
-
-    expect(resInsertOpenedClothes.body).toMatchObject({
+    expect(newImage.body).toMatchObject({
       message: 'operation success',
     });
 
-    const resEditFeature2 = await request(`${BASE_STRING}`)
-      .patch('/character/characteristics')
-      .set('Authorization', `bearer ${userToken}`)
-      .send({
-        clothes: [1, 2],
-        skills: [],
-        subjects: [],
-      });
+    const newPlayerFromDB = (
+      await request(`${BASE_STRING}`)
+        .get('/character')
+        .set('Authorization', `bearer ${userToken}`)
+    ).body;
 
-    expect(resEditFeature2.body).toMatchObject({
-      message: 'operation success',
-    });
-  });
+    expect(newPlayerFromDB.pathPhoto).toBeDefined();
+    expect(newPlayerFromDB.pathPhoto).not.toBeNull;
 
-  it('logout user', async () => {
-    const resLogOut = await request(`${BASE_STRING}`)
-      .get('/auth/logout')
-      .set('Authorization', `bearer ${userToken}`)
-      .send({
-        phone: newUser.phone,
-      });
-
-    expect(resLogOut.body).toMatchObject({ message: 'log out sucess' });
-
-    const resGetPage = await request(`${BASE_STRING}`)
-      .get('/character')
+    const getImage = await request(`${BASE_STRING}`)
+      .get('/character/image')
       .set('Authorization', `bearer ${userToken}`);
 
-    expect(resGetPage.body).toMatchObject({
-      message: 'you have not been authenticated yet',
-    });
+    expect(getImage.text).toBe(`${BASE_STRING}/${newPlayerFromDB.pathPhoto}`);
   });
 });

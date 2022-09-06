@@ -5,6 +5,7 @@ import { generateUser } from './generateUser';
 describe('registration-login user, login admin', () => {
   let adminToken = '';
   let userToken = '';
+  let userId: number;
   let newUser: { name: string; phone: string; password: string };
 
   it('login admin', async () => {
@@ -20,7 +21,7 @@ describe('registration-login user, login admin', () => {
     });
   });
 
-  it('registration-login-get page-patch clothes user', async () => {
+  it('registration-login-get page user, get candidate by phone, disable clothes', async () => {
     newUser = generateUser();
 
     await request(`${BASE_STRING}`).post('/auth/registration').send(newUser);
@@ -59,19 +60,7 @@ describe('registration-login user, login admin', () => {
       endurance: expect.any(Number),
       intellect: expect.any(Number),
     });
-
-    const resEditFeature = await request(`${BASE_STRING}`)
-      .patch('/character/characteristics')
-      .set('Authorization', `bearer ${userToken}`)
-      .send({
-        clothes: [1, 2],
-        skills: [],
-        subjects: [],
-      });
-
-    expect(resEditFeature.body).toMatchObject({
-      message: 'operation failed',
-    });
+    userId = resGetPage.body.userId;
 
     const resInsertOpenedClothes = await request(`${BASE_STRING}`)
       .post('/user/insert/openedClothes')
@@ -94,24 +83,40 @@ describe('registration-login user, login admin', () => {
     expect(resEditFeature2.body).toMatchObject({
       message: 'operation success',
     });
-  });
 
-  it('logout user', async () => {
-    const resLogOut = await request(`${BASE_STRING}`)
-      .get('/auth/logout')
-      .set('Authorization', `bearer ${userToken}`)
-      .send({
-        phone: newUser.phone,
-      });
+    const resInsertDisablesClothes = await request(`${BASE_STRING}`)
+      .delete('/clothes/disable/1')
+      .set('Authorization', `bearer ${adminToken}`);
 
-    expect(resLogOut.body).toMatchObject({ message: 'log out sucess' });
+    expect(resInsertDisablesClothes.body).toMatchObject({
+      message: 'operation success',
+    });
 
-    const resGetPage = await request(`${BASE_STRING}`)
+    const resGetPage2 = await request(`${BASE_STRING}`)
       .get('/character')
       .set('Authorization', `bearer ${userToken}`);
 
-    expect(resGetPage.body).toMatchObject({
-      message: 'you have not been authenticated yet',
+    expect(resGetPage2.body.openedClothes).toEqual([2, 3, 4]);
+
+    expect(resGetPage2.body).toMatchObject({
+      id: expect.any(Number),
+      name: expect.any(String),
+      strength: expect.any(Number),
+      agility: expect.any(Number),
+      endurance: expect.any(Number),
+      intellect: expect.any(Number),
+    });
+  });
+
+  it('get user by id', async () => {
+    const resGetUser = await request(`${BASE_STRING}`)
+      .get('/user')
+      .send({ id: userId })
+      .set('Authorization', `bearer ${adminToken}`);
+
+    expect(resGetUser.body).toMatchObject({
+      ...newUser,
+      password: expect.any(String),
     });
   });
 });

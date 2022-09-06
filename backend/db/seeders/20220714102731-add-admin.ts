@@ -1,6 +1,6 @@
-import { Sequelize_migration } from "../util/inteface";
-import {QueryInterface} from "sequelize";
-import { ROLE } from "../../src/constants";
+import { Sequelize_migration } from '../util/inteface';
+import { QueryInterface } from 'sequelize';
+import { ROLE } from '../../src/constants';
 import * as bcrypt from 'bcryptjs';
 import * as env from 'env-var';
 import * as dotenv from 'dotenv';

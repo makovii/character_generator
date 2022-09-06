@@ -29,7 +29,6 @@ import { JwtDB } from './auth/jwt.model';
     ConfigModule.forRoot({
       envFilePath: `.env`,
     }),
-    MongooseModule.forRoot(env.get('MONGO_URI').required().asString()),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: env.get('POSTGRES_HOST').required().asString(),
